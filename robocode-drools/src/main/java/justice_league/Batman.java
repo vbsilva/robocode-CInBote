@@ -30,7 +30,7 @@ import robocode.StatusEvent;
  *
  * @author ribadas
  */
-public class RobotDrools extends AdvancedRobot {
+public class Batman extends AdvancedRobot {
 
     public static String FICHERO_REGLAS = "justice_league/reglas/reglas_robot.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
@@ -41,7 +41,7 @@ public class RobotDrools extends AdvancedRobot {
     private Vector<FactHandle> referenciasHechosActuales = new Vector<FactHandle>();
 
     
-    public RobotDrools(){
+    public Batman(){
     }
     
     @Override
@@ -85,13 +85,13 @@ public class RobotDrools extends AdvancedRobot {
 
 
     private void crearBaseConocimiento() {
-        String ficheroReglas = System.getProperty("robot.reglas", RobotDrools.FICHERO_REGLAS);
+        String ficheroReglas = System.getProperty("robot.reglas", Batman.FICHERO_REGLAS);
 
         DEBUG.mensaje("crear base de conocimientos");
         kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         
         DEBUG.mensaje("cargar reglas desde "+ficheroReglas);
-        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas, RobotDrools.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas, Batman.class), ResourceType.DRL);
         if (kbuilder.hasErrors()) {
             System.err.println(kbuilder.getErrors().toString());
         }
@@ -130,7 +130,7 @@ public class RobotDrools extends AdvancedRobot {
         Accion accion;
         Vector<Accion> listaAcciones = new Vector<Accion>();
 
-        for (QueryResultsRow resultado : ksession.getQueryResults(RobotDrools.CONSULTA_ACCIONES)) {
+        for (QueryResultsRow resultado : ksession.getQueryResults(Batman.CONSULTA_ACCIONES)) {
             accion = (Accion) resultado.get("accion");  // Obtener el objeto accion
             accion.setRobot(this);                      // Vincularlo al robot actual
             listaAcciones.add(accion);

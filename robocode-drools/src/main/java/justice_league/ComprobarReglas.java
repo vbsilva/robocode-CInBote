@@ -81,7 +81,7 @@ public class ComprobarReglas {
         Accion accion;
         Vector<Accion> listaAcciones = new Vector<Accion>();
 
-        for (QueryResultsRow resultado : ksession.getQueryResults(RobotDrools.CONSULTA_ACCIONES)) {
+        for (QueryResultsRow resultado : ksession.getQueryResults(Batman.CONSULTA_ACCIONES)) {
             accion = (Accion) resultado.get("accion");  // Obtener el objeto accion
             accion.setRobot(null);                      // Vincularlo al robot actual
             listaAcciones.add(accion);
