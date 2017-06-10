@@ -1,4 +1,4 @@
-# robocode-CInBote
+# robocode-Justice_League
 University project aimed to learn the AI basics using robocode. Universidade Federal de Pernambuco - CIn - Brazil
 
 No droolsrobocode.bat:
