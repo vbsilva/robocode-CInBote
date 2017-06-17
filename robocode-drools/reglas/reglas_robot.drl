@@ -83,14 +83,13 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
       $datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
       $datosVictima.setDistancia($victimaEscaneada.getDistance());
       
-      insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
+      insert(new Accion(Accion.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
       double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
       double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));
+      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()), 1));
 end
-
 
 
 // Victima detectada por radar, si está en el punto de mira (anguloRelativoCañón == anguloRelativoVictima) con un margen de 2 grados, disparar con el maximo disponible
@@ -101,7 +100,7 @@ rule "victima en punto de mira -> disparar"
       Victima ($nombreVictima: nombre)
       // Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
       ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
-      eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
+      eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)   
    then
       insert(new Accion(Accion.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
       System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
