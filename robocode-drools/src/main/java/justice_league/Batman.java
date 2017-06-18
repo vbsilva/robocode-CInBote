@@ -5,6 +5,7 @@
 package justice_league;
 
 import java.util.Vector;
+import java.awt.Color;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
@@ -55,7 +56,9 @@ public class Batman extends AdvancedRobot {
         setAdjustGunForRobotTurn(true);
         setAdjustRadarForGunTurn(true);
         setAdjustRadarForRobotTurn(true);
-
+        
+        // Set colors (body, gun, radar, bullet, scan arc)
+        setColors(Color.BLACK, Color.DARK_GRAY, Color.BLACK, Color.YELLOW, Color.YELLOW);
 
         while (true) {
         	DEBUG.mensaje("inicio turno");
