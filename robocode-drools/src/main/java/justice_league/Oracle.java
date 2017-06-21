@@ -15,23 +15,25 @@ import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
-import robocode.AdvancedRobot;
 import robocode.BulletHitBulletEvent;
 import robocode.BulletHitEvent;
 import robocode.BulletMissedEvent;
+import robocode.Droid;
 import robocode.HitByBulletEvent;
 import robocode.HitRobotEvent;
 import robocode.HitWallEvent;
+import robocode.MessageEvent;
 import robocode.RobotDeathEvent;
 import robocode.RobotStatus;
 import robocode.ScannedRobotEvent;
 import robocode.StatusEvent;
+import robocode.TeamRobot;
 
 /**
  *
- * @author casc2
+ * @author vbas
  */
-public class Batman extends AdvancedRobot {
+public class Oracle extends TeamRobot  implements Droid{
 
     public static String FICHERO_REGLAS = "justice_league/reglas/reglas_robot.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
@@ -42,7 +44,7 @@ public class Batman extends AdvancedRobot {
     private Vector<FactHandle> referenciasHechosActuales = new Vector<FactHandle>();
 
     
-    public Batman(){
+    public Oracle(){
     }
     
     @Override
@@ -88,13 +90,13 @@ public class Batman extends AdvancedRobot {
 
 
     private void crearBaseConocimiento() {
-        String ficheroReglas = System.getProperty("robot.reglas", Batman.FICHERO_REGLAS);
+        String ficheroReglas = System.getProperty("robot.reglas", Oracle.FICHERO_REGLAS);
 
         DEBUG.mensaje("crear base de conocimientos");
         kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         
         DEBUG.mensaje("cargar reglas desde "+ficheroReglas);
-        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas, Batman.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas, Oracle.class), ResourceType.DRL);
         if (kbuilder.hasErrors()) {
             System.err.println(kbuilder.getErrors().toString());
         }
@@ -152,41 +154,41 @@ public class Batman extends AdvancedRobot {
     // Insertar en la memoria activa los distintos tipos de eventos recibidos 
     @Override
     public void onBulletHit(BulletHitEvent event) {
-          referenciasHechosActuales.add(ksession.insert(event));
+          //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onBulletHitBullet(BulletHitBulletEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onBulletMissed(BulletMissedEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onHitByBullet(HitByBulletEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onHitRobot(HitRobotEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onHitWall(HitWallEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
 
     @Override
     public void onRobotDeath(RobotDeathEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+        //referenciasHechosActuales.add(ksession.insert(event));
     }
-
+    
     @Override
-    public void onScannedRobot(ScannedRobotEvent event) {
+    public void onMessageReceived(MessageEvent event ){
         referenciasHechosActuales.add(ksession.insert(event));
     }
 
