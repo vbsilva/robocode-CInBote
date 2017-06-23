@@ -1,6 +1,7 @@
 package justice_league;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
@@ -32,5 +33,13 @@ public final class DEBUG {
 				System.out.println("  "+a.toString());				
 			}
 		}		
+	}
+
+	public static void volcarAcciones(Vector<Accion_Team> acciones) {
+		if (modoDebugHabilitado){
+			for (Accion_Team a: acciones){
+				System.out.println("  "+a.toString());				
+			}
+		}
 	}
 }
