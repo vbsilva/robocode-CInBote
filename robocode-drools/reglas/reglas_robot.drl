@@ -8,7 +8,6 @@ import robocode.ScannedRobotEvent;
 // Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
 query "consulta_acciones"
 	accion: Accion()
-	accion_teamrobot: Accion_teamrobot()
 end
 
 
@@ -92,7 +91,7 @@ rule "victima en punto de mira -> disparar"
 		Victima ($nombreVictima: nombre)
 		// Victima detectada y cañon apunta en su angulo (con un margen de 6 grados)
 		ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
-		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)   
+		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)  
 	then
 		insert(new Accion(Accion.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
@@ -104,7 +103,7 @@ end
 rule "sin victima -> tomar la primera que aparezca"
 	when
 		not (exists Victima())
-		$victimaEscaneada: ScannedRobotEvent()
+		$victimaEscaneada: ScannedRobotEvent( name not contains "justice_league")
 		$status: EstadoRobot()
 	then
 		Victima victima = new Victima();
@@ -167,22 +166,3 @@ rule "choque con otro robot"
 		insert(new Accion(Accion.GIRAR_TANQUE_DER, (- $anguloRelativo*1.50), 5));
 		insert(new Accion(Accion.AVANZAR, 100, 5));
 end
-
-// cuando detectar una vitima, enviar a todos los otros
-rule "test broadcast"
-	when
-		$datosVictima: Victima ($nombreVictima: nombre)
-		$status : EstadoRobot()
-		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima)]
-	then
-		insert(new Accion_teamrobot(Accion_teamrobot.BROADCAST, "testando123", 5));
-end
-
-// cuando reciba el mesaje, imprima
-rule "print received message"
-	when
-		MessageEvent()
-	then
-		insert(new Accion_teamrobot(Accion_teamrobot.PRINT, "testando456", 5));
-end
-
