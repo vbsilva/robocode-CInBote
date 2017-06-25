@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package justice_league;
+package justice_league.team;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import robocode.TeamRobot;
 
 /**
  *
- * @author ribadas
+ * @author casc2
  */
 public class Accion_Team {
     private int        tipo;

@@ -1,6 +1,6 @@
-package justice_league
+package justice_league.team
 
-import justice_league.*;
+import justice_league.team*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
 
@@ -55,12 +55,11 @@ rule "victima detectada -> actualizar datos e ir broadcast message to droids"
 		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
-		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
+		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
 		double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-		insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()), 1));
 end
 
 
@@ -70,10 +69,11 @@ rule "victima en punto de mira -> disparar"
 	when
 		$status : EstadoRobot()
 		Victima ($nombreVictima: nombre)
-		// Victima detectada y cañon apunta en su angulo (con un margen de 6 grados)
+		// Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
 		ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
-		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)   
+		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
 	then
+		insert(new Accion_Team(Accion_Team.BROADCAST, "ATACAR", 1));
 		insert(new Accion_Team(Accion_Team.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
@@ -100,7 +100,6 @@ rule "sin victima -> tomar la primera que aparezca"
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-		insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));    
 		System.out.println("regla 6"); 
 end
 

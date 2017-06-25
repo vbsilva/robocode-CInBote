@@ -1,0 +1,7 @@
+#Robocode robot team
+#Sat Jun 24 20:51:45 EST 2017
+team.members=justice_league.WonderWoman_Leader,justice_league.Batman,justice_league.Batman,justice_league.Batman,justice_league.Batman
+team.author.name=Carlos, Fábio, Heitor e Vinicius
+robocode.version=1.1.2
+team.webpage=
+team.description=\                            The Justice League.\n                  WonderWoman_Leader scans for enemies,\n                  and orders the 4 Batman to fire.

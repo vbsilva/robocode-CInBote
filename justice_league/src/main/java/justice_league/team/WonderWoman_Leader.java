@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package justice_league;
+package justice_league.team;
 
 import java.util.Vector;
 import java.awt.Color;
@@ -15,6 +15,10 @@ import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
+
+import justice_league.team.DEBUG;
+import justice_league.team.EstadoBatalla;
+import justice_league.team.EstadoRobot;
 import robocode.HitByBulletEvent;
 import robocode.ScannedRobotEvent;
 import robocode.TeamRobot;
