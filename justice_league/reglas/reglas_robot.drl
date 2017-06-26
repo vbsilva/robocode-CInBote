@@ -100,7 +100,7 @@ end
 rule "sin victima -> tomar la primera que aparezca"
 	when
 		not (exists Victima())
-		$victimaEscaneada: ScannedRobotEvent()
+		$victimaEscaneada: ScannedRobotEvent( name not contains "justice_league" )
 		$status: EstadoRobot()
 	then
 		Victima victima = new Victima();
