@@ -5,6 +5,9 @@
 
 package justice_league_team;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import robocode.TeamRobot;
 
 /**
@@ -17,6 +20,7 @@ public class Accion_Team {
     private int        prioridad;
 
     private TeamRobot robot;   // Referncia al robot que ejecutara la accion
+	private Point point;
 
     public static final int AVANZAR=1;
     public static final int RETROCEDER=2;
@@ -28,6 +32,7 @@ public class Accion_Team {
     public static final int GIRAR_RADAR_IZQ=8;
     public static final int GIRAR_CANON_DER=9;
     public static final int GIRAR_CANON_IZQ=10;
+    public static final int BROADCAST=11;
 
 
     public Accion_Team() {
@@ -39,6 +44,12 @@ public class Accion_Team {
         this.prioridad = prioridad;
     }
 
+    public Accion_Team(int tipo, Point point, int prioridad) {
+        this.tipo = tipo;
+        this.point = point;
+        this.prioridad = prioridad;
+    }	
+    
     public double getParametro() {
         return parametro;
     }
@@ -78,6 +89,11 @@ public class Accion_Team {
                 case Accion_Team.GIRAR_RADAR_IZQ: robot.setTurnRadarLeft(parametro); break;
                 case Accion_Team.GIRAR_TANQUE_DER: robot.setTurnRight(parametro); break;
                 case Accion_Team.GIRAR_TANQUE_IZQ: robot.setTurnLeft(parametro); break;
+                case Accion_Team.BROADCAST: try {
+					robot.broadcastMessage(point);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} break;
             }
         }
     }
@@ -99,6 +115,7 @@ public class Accion_Team {
                 case Accion_Team.GIRAR_RADAR_IZQ: etqTipo="Girar radar izquierda"; break;
                 case Accion_Team.GIRAR_TANQUE_DER: etqTipo="Girar tanque derecha"; break;
                 case Accion_Team.GIRAR_TANQUE_IZQ: etqTipo="Girar tanque izquierda"; break;
+                case Accion_Team.BROADCAST: etqTipo="Broadcast message"; break;
             }
 	return "Accion[tipo:"+etqTipo+", param:"+parametro+", prioridad:"+prioridad+"]";
     }

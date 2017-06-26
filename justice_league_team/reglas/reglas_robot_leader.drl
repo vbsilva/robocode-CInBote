@@ -73,7 +73,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
 		
 		System.out.println($datosVictima.getX());
 		System.out.println($datosVictima.getY()); 
-		//insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
+		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
 		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
 		double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
