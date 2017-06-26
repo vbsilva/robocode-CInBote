@@ -1,4 +1,4 @@
-package justice_league.team;
+package justice_league_team;
 
 import java.util.List;
 import java.util.Vector;
@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 
-import justice_league.team.Accion_Team;
+import justice_league_team.Accion_Team;
 
 public final class DEBUG {
 	public static boolean modoDebugHabilitado = false;

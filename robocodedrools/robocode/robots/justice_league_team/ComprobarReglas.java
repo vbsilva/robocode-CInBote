@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package justice_league.team;
+package justice_league_team;
 
 import java.util.List;
 import java.util.Vector;
@@ -24,7 +24,7 @@ import robocode.*;
  */
 public class ComprobarReglas {
 
-    public static String FICHERO_REGLAS = "justice_league/reglas/reglas_robot_leader.drl";
+    public static String FICHERO_REGLAS = "justice_league_team/reglas/reglas_robot_leader.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
     private KnowledgeBuilder kbuilder;
     private KnowledgeBase kbase;                // Base de conocimientos

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package justice_league.team;
+package justice_league_team;
 
 import java.util.Vector;
 import java.awt.Color;
@@ -16,10 +16,16 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
 
-import justice_league.team.DEBUG;
-import justice_league.team.EstadoBatalla;
-import justice_league.team.EstadoRobot;
+import justice_league_team.DEBUG;
+import justice_league_team.EstadoBatalla;
+import justice_league_team.EstadoRobot;
+import robocode.BulletHitBulletEvent;
+import robocode.BulletHitEvent;
+import robocode.BulletMissedEvent;
 import robocode.HitByBulletEvent;
+import robocode.HitRobotEvent;
+import robocode.HitWallEvent;
+import robocode.RobotDeathEvent;
 import robocode.ScannedRobotEvent;
 import robocode.TeamRobot;
 
@@ -29,7 +35,7 @@ import robocode.TeamRobot;
  */
 public class WonderWoman_Leader extends TeamRobot {
 
-    public static String FICHERO_REGLAS = "justice_league/reglas/reglas_robot_leader.drl";
+    public static String FICHERO_REGLAS = "justice_league_team/reglas/reglas_robot_leader.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
     
     private KnowledgeBuilder kbuilder;
@@ -147,10 +153,40 @@ public class WonderWoman_Leader extends TeamRobot {
 
     // Insertar en la memoria activa los distintos tipos de eventos recibidos 
     @Override
+    public void onBulletHit(BulletHitEvent event) {
+          referenciasHechosActuales.add(ksession.insert(event));
+    }
+
+    @Override
+    public void onBulletHitBullet(BulletHitBulletEvent event) {
+        referenciasHechosActuales.add(ksession.insert(event));
+    }
+
+    @Override
+    public void onBulletMissed(BulletMissedEvent event) {
+        referenciasHechosActuales.add(ksession.insert(event));
+    }
+
+    @Override
     public void onHitByBullet(HitByBulletEvent event) {
         referenciasHechosActuales.add(ksession.insert(event));
     }
 
+    @Override
+    public void onHitRobot(HitRobotEvent event) {
+        referenciasHechosActuales.add(ksession.insert(event));
+    }
+
+    @Override
+    public void onHitWall(HitWallEvent event) {
+        referenciasHechosActuales.add(ksession.insert(event));
+    }
+
+    @Override
+    public void onRobotDeath(RobotDeathEvent event) {
+        referenciasHechosActuales.add(ksession.insert(event));
+    }
+    
     @Override
     public void onScannedRobot(ScannedRobotEvent event) {
         referenciasHechosActuales.add(ksession.insert(event));

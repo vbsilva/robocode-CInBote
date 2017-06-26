@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package justice_league.team;
+package justice_league_team;
 
 import java.io.IOException;
 
@@ -84,7 +84,6 @@ public class Accion_Team {
                 case Accion_Team.BROADCAST: try {
 					robot.broadcastMessage(parametro);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} break;
             }

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package justice_league.team;
+package justice_league_team;
 
 import robocode.TeamRobot;
 
