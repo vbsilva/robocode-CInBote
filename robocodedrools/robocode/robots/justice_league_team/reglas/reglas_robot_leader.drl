@@ -87,7 +87,6 @@ rule "victima en punto de mira -> disparar"
 		$datosVictima: Victima ($nombreVictima: nombre)
 		// Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
 		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)
-		//eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
