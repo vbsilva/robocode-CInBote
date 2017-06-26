@@ -59,8 +59,8 @@ rule "parado sin victima -> moverse al azar (girar+avanzar)"
 end
 
 
-// Victima detectada por radar, actualizar su localizacion e ir hacia ella apuntándola con cañon y radar
-rule "victima detectada -> actualizar datos e ir hacia ella"
+// Victima detectada por radar, actualizar su localizacion e apuntándola con cañon y radar
+rule "victima detectada -> actualizar datos"
 	when
 		$datosVictima: Victima ($nombreVictima: nombre)
 		$status : EstadoRobot()
@@ -71,15 +71,11 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
 		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
-		System.out.println($datosVictima.getX());
-		System.out.println($datosVictima.getY()); 
-		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
-		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
+		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
 		double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-		//insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()), 1));
 end
 
 
@@ -87,13 +83,18 @@ end
 //  (se activará a lavez que la regla anterior)
 rule "victima en punto de mira -> disparar"
 	when
-		$status : EstadoRobot()
-		Victima ($nombreVictima: nombre)
+		$status: EstadoRobot()
+		$datosVictima: Victima ($nombreVictima: nombre)
 		// Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
-		ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
-		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
+		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)
+		//eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
 	then
-		//insert(new Accion_Team(Accion_Team.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
+		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
+		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
+		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
+		$datosVictima.setDistancia($victimaEscaneada.getDistance());
+		
+		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
 
@@ -103,7 +104,7 @@ end
 rule "sin victima -> tomar la primera que aparezca"
 	when
 		not (exists Victima())
-		$victimaEscaneada: ScannedRobotEvent()
+		$victimaEscaneada: ScannedRobotEvent( name not contains "justice_league_team")
 		$status: EstadoRobot()
 	then
 		Victima victima = new Victima();
@@ -114,13 +115,11 @@ rule "sin victima -> tomar la primera que aparezca"
 		victima.setDistancia($victimaEscaneada.getDistance());
 		insert(victima);
 		
-		//insert(new Accion_Team(Accion_Team.BROADCAST, Point.Point(victima.x, victima.y), 1));
 		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
 		double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-		//insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));    
 		System.out.println("regla 6"); 
 end
 

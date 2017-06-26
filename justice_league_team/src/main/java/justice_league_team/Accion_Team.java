@@ -6,7 +6,6 @@
 package justice_league_team;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import robocode.TeamRobot;
 
