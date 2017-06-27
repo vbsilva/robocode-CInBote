@@ -68,7 +68,7 @@ rule "victima detectada -> actualizar datos"
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
-		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
+		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
 		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
@@ -90,7 +90,7 @@ rule "victima en punto de mira -> disparar"
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
-		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
+		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
 		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
@@ -110,7 +110,7 @@ rule "sin victima -> tomar la primera que aparezca"
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		victima.setNombre($victimaEscaneada.getName());
 		victima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
-		victima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
+		victima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		victima.setDistancia($victimaEscaneada.getDistance());
 		insert(victima);
 		
