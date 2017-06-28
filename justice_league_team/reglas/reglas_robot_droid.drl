@@ -1,0 +1,28 @@
+package justice_league_team
+
+import justice_league_team.*;
+import robocode.*;
+import robocode.MessageEvent;
+
+// Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
+query "consulta_acciones"
+	accion: Accion_Team()
+end
+
+// 
+// REGLAS
+//
+
+// Quando receber mensagem do líder, executa o comando
+rule "ao receber uma mensagem -> atire no ponto dado"
+	when
+		$mensagem: MessageEvent()
+		$status: EstadoRobot()
+	then
+		Point p = (Point) $mensagem.getMessage();
+		double theta = Auxiliar.anguloAbsoluto($status.getX(), $status.getY(), p.getX(), p.getY());
+		
+		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, (theta -  $status.getGunHeading()), 1));
+		insert(new Accion_Team(Accion_Team.DISPARAR, 3, 1));
+		System.out.println("regla 1");
+end
