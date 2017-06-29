@@ -80,7 +80,7 @@ public class Auxiliar {
         double offsetX = xDestino - xOrigen;
         double offsetY = yDestino - yOrigen;
 
-        return Math.toDegrees(Math.atan2(offsetY, offsetX));
+        return Math.toDegrees(Math.atan2(offsetX, offsetY));
     }
 
     /**

@@ -13,6 +13,18 @@ end
 // REGLAS
 //
 
+// Regla de conveniencia: elimina acciones del mismo tipo con menor prioridad
+// Si no se hiciera el robot ejecutaría la última acción insertada sin atender a su pioridad
+rule "depurar acciones del mismo tipo"
+	when
+		$accion1: Accion_Team($tipo: tipo, $prioridad1: prioridad)
+		$accion2: Accion_Team(tipo==$tipo, $prioridad2: prioridad)
+		eval ($prioridad1 > $prioridad2)
+	then
+		retract($accion2);     // Elimina la accion menos prioritaria 
+		System.out.println("regla 1");
+end
+
 // Quando receber mensagem do líder, executa o comando
 rule "ao receber uma mensagem -> atire no ponto dado"
 	when
@@ -22,7 +34,7 @@ rule "ao receber uma mensagem -> atire no ponto dado"
 		Point p = (Point) $mensagem.getMessage();
 		double theta = Auxiliar.anguloAbsoluto($status.getX(), $status.getY(), p.getX(), p.getY());
 		
-		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, (theta -  $status.getGunHeading()), 1));
-		insert(new Accion_Team(Accion_Team.DISPARAR, 3, 1));
-		System.out.println("regla 1");
+		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, robocode.util.Utils.normalRelativeAngleDegrees(theta -  $status.getGunHeading()), 1));
+		insert(new Accion_Team(Accion_Team.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
+		System.out.println("regla 2");
 end
