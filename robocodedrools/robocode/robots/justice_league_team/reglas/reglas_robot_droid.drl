@@ -13,6 +13,24 @@ end
 // REGLAS
 //
 
+/*
+// Quando receber cores, aplicá-las nas partes do robo
+rule "ao receber cores -> pintar partes do robo"
+	when
+		$status: EstadoRobot()
+		$mensagem: MessageEvent()
+		eval($mensagem.getMessage() instanceof RobotoColors)
+	then
+		RobotColors c = (RobotColors) $mensagem.getMessage();
+		$status.setBodyColor(c.bodyColor);
+		$status.setGunColor(c.gunColor);
+		$status.setRadarColor(c.radarColor);
+		$status.setScanColor(c.scanColor);
+		$status.setBulletColor(c.bulletColor);
+		
+		System.out.println("regla 0");
+end
+*/
 // Regla de conveniencia: elimina acciones del mismo tipo con menor prioridad
 // Si no se hiciera el robot ejecutaría la última acción insertada sin atender a su pioridad
 rule "depurar acciones del mismo tipo"
@@ -25,11 +43,12 @@ rule "depurar acciones del mismo tipo"
 		System.out.println("regla 1");
 end
 
-// Quando receber mensagem do líder, executa o comando
-rule "ao receber uma mensagem -> atire no ponto dado"
+// Quando receber a localização da vítima, move o canhão e atira no ponto
+rule "ao receber um ponto -> mire e atire nele"
 	when
-		$mensagem: MessageEvent()
 		$status: EstadoRobot()
+		$mensagem: MessageEvent()
+		eval($mensagem.getMessage() instanceof Point)
 	then
 		Point p = (Point) $mensagem.getMessage();
 		double theta = Auxiliar.anguloAbsoluto($status.getX(), $status.getY(), p.getX(), p.getY());

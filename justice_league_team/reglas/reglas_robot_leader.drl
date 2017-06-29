@@ -3,6 +3,7 @@ package justice_league_team
 import justice_league_team.*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
+import robocode.control.events.BattleStartedEvent;
 
 // Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
 query "consulta_acciones"
@@ -21,6 +22,22 @@ declare Victima
 	distancia: double
 end
 
+/*
+// Ao se iniciar uma batalha, alterar as cores dos droids
+rule "início de batalha -> mudar as cores dos droids"
+	when
+		BattleStartedEvent()
+	then
+		RobotColors c = new RobotColors();
+		c.bodyColor = Color.yellow;
+		c.gunColor = Color.yellow;
+		c.radarColor = Color.yellow;
+		c.scanColor = Color.yellow;
+		c.bulletColor = Color.yellow;
+		insert(new Accion_Team(Accion_Team.BROADCAST, c, 1));
+		System.out.println("regla 0");
+end
+*/
 
 // Regla de conveniencia: elimina acciones del mismo tipo con menor prioridad
 // Si no se hiciera el robot ejecutaría la última acción insertada sin atender a su pioridad
@@ -79,13 +96,12 @@ rule "victima detectada -> actualizar datos"
 end
 
 
-// Victima detectada por radar, si está en el punto de mira (anguloRelativoCañón == anguloRelativoVictima) con un margen de 2 grados, disparar con el maximo disponible
+// Victima detectada por radar, si está en el punto de mira (anguloRelativoCañón == anguloRelativoVictima)
 //  (se activará a lavez que la regla anterior)
 rule "victima en punto de mira -> disparar"
 	when
 		$status: EstadoRobot()
 		$datosVictima: Victima ($nombreVictima: nombre)
-		// Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
 		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());

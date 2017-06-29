@@ -6,6 +6,8 @@
 package justice_league_team;
 
 import java.io.IOException;
+import java.io.Serializable;
+
 import robocode.TeamRobot;
 
 /**
@@ -18,7 +20,7 @@ public class Accion_Team {
     private int        prioridad;
 
     private TeamRobot robot;   // Referncia al robot que ejecutara la accion
-	private Point point;
+	private Serializable message;
 
     public static final int AVANZAR=1;
     public static final int RETROCEDER=2;
@@ -42,9 +44,9 @@ public class Accion_Team {
         this.prioridad = prioridad;
     }
 
-    public Accion_Team(int tipo, Point point, int prioridad) {
+    public Accion_Team(int tipo, Serializable message, int prioridad) {
         this.tipo = tipo;
-        this.point = point;
+        this.message = message;
         this.prioridad = prioridad;
     }	
     
@@ -88,7 +90,7 @@ public class Accion_Team {
                 case Accion_Team.GIRAR_TANQUE_DER: robot.setTurnRight(parametro); break;
                 case Accion_Team.GIRAR_TANQUE_IZQ: robot.setTurnLeft(parametro); break;
                 case Accion_Team.BROADCAST: try {
-					robot.broadcastMessage(point);
+					robot.broadcastMessage(message);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} break;
