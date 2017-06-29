@@ -80,7 +80,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
 end
 
 
-// Victima detectada por radar, si está en el punto de mira (anguloRelativoCañón == anguloRelativoVictima) con un margen de 2 grados, disparar con el maximo disponible
+// Victima detectada por radar, si está en el punto de mira (anguloRelativoCañón == anguloRelativoVictima) con un margen de 6 grados, disparar con el maximo disponible
 //  (se activará a lavez que la regla anterior)
 rule "victima en punto de mira -> disparar"
 	when
