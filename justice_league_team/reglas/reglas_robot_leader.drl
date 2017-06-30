@@ -3,7 +3,6 @@ package justice_league_team
 import justice_league_team.*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
-import robocode.control.events.BattleStartedEvent;
 
 // Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
 query "consulta_acciones"
@@ -21,23 +20,6 @@ declare Victima
 	y: double
 	distancia: double
 end
-
-/*
-// Ao se iniciar uma batalha, alterar as cores dos droids
-rule "início de batalha -> mudar as cores dos droids"
-	when
-		BattleStartedEvent()
-	then
-		RobotColors c = new RobotColors();
-		c.bodyColor = Color.yellow;
-		c.gunColor = Color.yellow;
-		c.radarColor = Color.yellow;
-		c.scanColor = Color.yellow;
-		c.bulletColor = Color.yellow;
-		insert(new Accion_Team(Accion_Team.BROADCAST, c, 1));
-		System.out.println("regla 0");
-end
-*/
 
 // Regla de conveniencia: elimina acciones del mismo tipo con menor prioridad
 // Si no se hiciera el robot ejecutaría la última acción insertada sin atender a su pioridad
@@ -108,18 +90,16 @@ rule "victima en punto de mira -> disparar"
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
 		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
-		
+
 		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
 
-
-
-// Cuando no hay una víctima señalada y se escanea un robot,  anotarlo como víctima e ir hacia él apuntando radar y cañón
+// Cuando no hay una víctima señalada y se escanea un robot,  anotarlo como víctima e apuntar radar y cañón
 rule "sin victima -> tomar la primera que aparezca"
 	when
 		not (exists Victima())
-		$victimaEscaneada: ScannedRobotEvent( name not contains "justice_league_team")
+		$victimaEscaneada: ScannedRobotEvent(name not contains "justice_league_team")
 		$status: EstadoRobot()
 	then
 		Victima victima = new Victima();

@@ -19,7 +19,6 @@ import org.drools.runtime.rule.QueryResultsRow;
 import justice_league_team.DEBUG;
 import justice_league_team.EstadoBatalla;
 import justice_league_team.EstadoRobot;
-import robocode.control.events.BattleStartedEvent;
 import robocode.BulletHitBulletEvent;
 import robocode.BulletHitEvent;
 import robocode.BulletMissedEvent;
@@ -190,10 +189,6 @@ public class WonderWoman_Leader extends TeamRobot {
     
     @Override
     public void onScannedRobot(ScannedRobotEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
-    }
-
-    public void onBattleStarted(BattleStartedEvent event) {
         referenciasHechosActuales.add(ksession.insert(event));
     }
 
