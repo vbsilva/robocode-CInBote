@@ -4,6 +4,7 @@
  */
 package justice_league;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.Color;
 import org.drools.KnowledgeBase;
@@ -104,6 +105,10 @@ public class Batman extends AdvancedRobot {
         
         DEBUG.mensaje("crear sesion (memoria activa)");
         ksession = kbase.newStatefulKnowledgeSession();
+		
+		ksession = kbase.newStatefulKnowledgeSession();
+		
+		ksession.setGlobal("sentido", new ArrayList<Integer>());
     }
 
 
