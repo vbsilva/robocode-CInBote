@@ -31,11 +31,15 @@ rule "ao receber um ponto -> mire e atire nele"
 		$status: EstadoRobot()
 		$mensagem: MessageEvent()
 		eval($mensagem.getMessage() instanceof Point)
+		$batalla: EstadoBatalla()
 	then
 		Point p = (Point) $mensagem.getMessage();
 		double theta = Auxiliar.anguloAbsoluto($status.getX(), $status.getY(), p.getX(), p.getY());
 		
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, robocode.util.Utils.normalRelativeAngleDegrees(theta -  $status.getGunHeading()), 1));
 		insert(new Accion_Team(Accion_Team.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
+		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, (360*Math.random() - 180), 1));
+		double avance = Math.min($batalla.getAnchoCampo(), $batalla.getAltoCampo())*Math.random();
+		insert(new Accion_Team(Accion_Team.AVANZAR, avance, 1));
 		System.out.println("regla 2");
 end
