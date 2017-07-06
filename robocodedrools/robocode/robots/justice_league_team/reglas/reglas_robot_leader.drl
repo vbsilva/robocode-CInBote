@@ -42,22 +42,6 @@ rule "sin robots a la vista -> giro completo del radar"
 		System.out.println("regla 2");
 end
 
-// Cuando esta parado y no hay victima girar radar 360 y moverse al azar
-rule "parado sin victima -> moverse al azar (girar+avanzar)"
-	when
-		EstadoRobot( distanceRemaining == 0 )
-		not (exists Victima())
-		$batalla: EstadoBatalla()
-	then
-		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, 360, 1));
-		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, (360*Math.random() - 180), 1));
-		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, (360*Math.random() - 180), 1));
-		double avance = Math.min($batalla.getAnchoCampo(), $batalla.getAltoCampo())*Math.random();
-		insert(new Accion_Team(Accion_Team.AVANZAR, avance, 1));
-		System.out.println("regla 3");
-end
-
-
 // Victima detectada por radar, actualizar su localizacion e apuntándola con cañon y radar
 rule "victima detectada -> actualizar datos"
 	when
@@ -70,11 +54,13 @@ rule "victima detectada -> actualizar datos"
 		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
-		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
+		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
 		double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
+		insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()), 1));
+		System.out.println("regla 3"); 
 end
 
 
@@ -85,12 +71,14 @@ rule "victima en punto de mira -> disparar"
 		$status: EstadoRobot()
 		$datosVictima: Victima ($nombreVictima: nombre)
 		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)
+		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 5)
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
 		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 
+		insert(new Accion_Team(Accion_Team.DISPARAR, Math.max(Math.min(Rules.MAX_BULLET_POWER, (-0.008*$victimaEscaneada.getDistance() + 3.8)), Rules.MIN_BULLET_POWER), 1));
 		insert(new Accion_Team(Accion_Team.BROADCAST, (new Point($datosVictima.getX(), $datosVictima.getY())), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
@@ -115,6 +103,7 @@ rule "sin victima -> tomar la primera que aparezca"
 		insert(new Accion_Team(Accion_Team.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
 		double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
 		insert(new Accion_Team(Accion_Team.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
+		insert(new Accion_Team(Accion_Team.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));  
 		System.out.println("regla 6"); 
 end
 
@@ -122,12 +111,11 @@ end
 rule "muerte de la victima"
 	when
 		$victima: Victima ($nombreVictima: nombre)
-		RobotDeathEvent( name == $nombreVictima )
+		RobotDeathEvent(name == $nombreVictima)
 	then 
 		retract($victima);
 		System.out.println("Uno menos");
 end
-
 
 // Al chocar con un muro, salir "rebotado" en el angulo opuesto
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
@@ -138,7 +126,6 @@ rule "choque con muro"
 		insert(new Accion_Team(Accion_Team.GIRAR_TANQUE_DER, (- $anguloRelativo), 5));
 		insert(new Accion_Team(Accion_Team.AVANZAR, 100, 5));
 end
-
 
 // Al chocar con victima, retroceder
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  

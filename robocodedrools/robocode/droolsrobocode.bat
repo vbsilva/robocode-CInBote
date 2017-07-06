@@ -16,4 +16,4 @@
  echo !CLASSPATH!
  set ROBOCODE_PATH=%CD%
 
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Xmx512M -cp %CLASSPATH% -Dsun.io.useCanonCaches=false -DNOSECURITY=true -DWORKINGDIRECTORY=%ROBOCODE_PATH% -Drobot.debug=true robocode.Robocode %*
+java -Xdebug -Xrunjdwp:transport=dt_socket,address=8080,server=y,suspend=n -Xmx512M -cp %CLASSPATH% -Dsun.io.useCanonCaches=false -DNOSECURITY=true -DWORKINGDIRECTORY=%ROBOCODE_PATH% -Drobot.debug=true robocode.Robocode %*

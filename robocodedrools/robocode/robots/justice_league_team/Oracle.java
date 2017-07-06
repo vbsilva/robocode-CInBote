@@ -16,6 +16,7 @@ import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
 import java.util.Vector;
 import justice_league_team.DEBUG;
+import justice_league_team.EstadoBatalla;
 import justice_league_team.EstadoRobot;
 import robocode.Droid;
 import robocode.MessageEvent;
@@ -50,6 +51,7 @@ public class Oracle extends TeamRobot implements Droid {
 
             //cargarEventos();  // se hace en los metodos onXXXXXEvent()
             cargarEstadoRobot();
+            cargarEstadoBatalla();
         	
             // Lanzar reglas
             DEBUG.mensaje("hechos en memoria activa");
@@ -95,6 +97,15 @@ public class Oracle extends TeamRobot implements Droid {
         referenciasHechosActuales.add(ksession.insert(estadoRobot));
     }
     
+    private void cargarEstadoBatalla() {
+        EstadoBatalla estadoBatalla =
+                new EstadoBatalla(getBattleFieldWidth(), getBattleFieldHeight(),
+                getNumRounds(), getRoundNum(),
+                getTime(),
+                getOthers());
+        referenciasHechosActuales.add(ksession.insert(estadoBatalla));
+    }
+    
     private void limpiarHechosIteracionAnterior() {
         for (FactHandle referenciaHecho : this.referenciasHechosActuales) {
             ksession.retract(referenciaHecho);
@@ -127,4 +138,5 @@ public class Oracle extends TeamRobot implements Droid {
     public void onMessageReceived(MessageEvent event) {
           referenciasHechosActuales.add(ksession.insert(event));
     }
+    
 }

@@ -3,7 +3,6 @@ package justice_league
 import justice_league.*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
-import java.util.ArrayList;
 
 // Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
 query "consulta_acciones"
@@ -21,8 +20,6 @@ declare Victima
 	y: double
 	distancia: double
 end
-
-//global ArrayListList<Integer> sentido;
 
 
 // Regla de conveniencia: elimina acciones del mismo tipo con menor prioridad
@@ -71,7 +68,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
 	then
 		double anguloAbsoluto = Auxiliar.anguloAbsoluto($status.getHeading(), $victimaEscaneada.getBearing());
 		$datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
-		$datosVictima.setY(Auxiliar.calcularY($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
+		$datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
 		$datosVictima.setDistancia($victimaEscaneada.getDistance());
 		
 		insert(new Accion(Accion.GIRAR_TANQUE_DER, Auxiliar.anguloRelativo(-80, $victimaEscaneada.getBearing()), 1));
@@ -91,9 +88,9 @@ rule "victima en punto de mira -> disparar"
 		Victima ($nombreVictima: nombre)
 		// Victima detectada y cañon apunta en su angulo (con un margen de 6 grados)
 		$victimaEscaneada: ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
-		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)   
+		eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 6)  
 	then
-		insert(new Accion(Accion.DISPARAR, Math.max(Math.min(Rules.MAX_BULLET_POWER,-0.008*$victimaEscaneada.getDistance()+3.8), Rules.MIN_BULLET_POWER), 1));
+		insert(new Accion(Accion.DISPARAR, Math.max(Math.min(Rules.MAX_BULLET_POWER, (-0.008*$victimaEscaneada.getDistance() + 3.8)), Rules.MIN_BULLET_POWER), 1));
 		System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
 
@@ -142,7 +139,6 @@ rule "choque con muro"
 	then
 		insert(new Accion(Accion.GIRAR_TANQUE_DER, (- $anguloRelativo), 5));
 		insert(new Accion(Accion.AVANZAR, 100, 5));
-		//sentido = sentido.intValue()*(-1);
 end
 
 

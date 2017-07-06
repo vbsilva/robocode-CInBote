@@ -43,7 +43,6 @@ public class WonderWoman_Leader extends TeamRobot {
     private StatefulKnowledgeSession ksession;  // Memoria activa
     private Vector<FactHandle> referenciasHechosActuales = new Vector<FactHandle>();
 
-    
     public WonderWoman_Leader(){
     }
     
@@ -88,7 +87,6 @@ public class WonderWoman_Leader extends TeamRobot {
 
     }
 
-
     private void crearBaseConocimiento() {
         String ficheroReglas = System.getProperty("robot.reglas", WonderWoman_Leader.FICHERO_REGLAS);
 
@@ -107,8 +105,6 @@ public class WonderWoman_Leader extends TeamRobot {
         DEBUG.mensaje("crear sesion (memoria activa)");
         ksession = kbase.newStatefulKnowledgeSession();
     }
-
-
 
     private void cargarEstadoRobot() {
     	EstadoRobot estadoRobot = new EstadoRobot(this);
